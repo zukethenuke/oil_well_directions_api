@@ -1,0 +1,2 @@
+class NdWell < ApplicationRecord
+end
