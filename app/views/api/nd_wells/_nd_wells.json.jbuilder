@@ -1,0 +1,9 @@
+json.id well.id
+json.apiNo well.api_no
+json.currentOperator well.current_operator
+json.currentWellName well.current_well_name
+json.leaseName well.lease_name
+json.leaseNumber well.lease_number
+json.td well.td
+json.latitude well.latitude
+json.longitude well.longitude
