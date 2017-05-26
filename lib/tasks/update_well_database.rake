@@ -29,7 +29,7 @@ task :unzip_well_index => :download_well_index do
   end
 end
 
-task :seed_wells => [:environment, :unzip_well_index] do
+task :seed_wells => [:environment] do
   puts 'Cleaning'
   clean_csv = []
   csv_file = File.open(well_index_dir + 'WellIndex.csv')

@@ -1,2 +1,0 @@
-class NdWellsController < ApplicationController
-end
