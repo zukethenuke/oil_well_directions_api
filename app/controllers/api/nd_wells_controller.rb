@@ -13,4 +13,9 @@ class Api::NdWellsController < ApplicationController
     # render 'show.json.jbuilder'
     render json: {well: @well}
   end
+
+  def random
+    @wells = NdWell.limit(20).order("RANDOM()")
+    render json: {wells: @wells}
+  end
 end
