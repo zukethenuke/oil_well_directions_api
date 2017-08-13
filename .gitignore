@@ -15,4 +15,4 @@
 
 .byebug_history
 .env
-/lib/well_index_files/*
+# /lib/well_index_files/*
