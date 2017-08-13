@@ -45,6 +45,12 @@ task :seed_wells => [:environment] do
   csv_file = File.open(well_index_dir + 'cleanded_well_index.csv')
   puts 'Seeding'
   CSV.foreach(csv_file, :headers => true, :header_converters => :symbol) do |row|
+    if row[:wellstatusdate].present?
+      new_date = row[:wellstatusdate].split('/')
+      byebug
+      row[:wellstatusdate] = Date.new(new_date[2].to_i, new_date[0].to_i, new_date[1].to_i)
+    end
+
     NdWell.create(  
       api_no: row[:apino],
       file_no: row[:fileno],
