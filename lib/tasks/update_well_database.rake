@@ -47,7 +47,6 @@ task :seed_wells => [:environment] do
   CSV.foreach(csv_file, :headers => true, :header_converters => :symbol) do |row|
     if row[:wellstatusdate].present?
       new_date = row[:wellstatusdate].split('/')
-      byebug
       row[:wellstatusdate] = Date.new(new_date[2].to_i, new_date[0].to_i, new_date[1].to_i)
     end
 
