@@ -34,17 +34,21 @@ task :seed_wells => [:environment] do
   clean_csv = []
   csv_file = File.open(well_index_dir + 'WellIndex.csv')
   csv_file.each_with_index do |row, i|
+    # row = row.gsub(/"/, '').gsub(/\r\n/, '').gsub(/, INC/, '').gsub(/, LLC/, '').split(',') #remove extra quotes and carriage return
     row = row.gsub(/"/, '').gsub(/\r\n/, '').split(',') #remove extra quotes and carriage return
     clean_csv << row
   end
-  CSV.open(well_index_dir + 'cleanded_well_index.csv', 'w') do |file|
+  CSV.open(well_index_dir + 'cleaned_well_index.csv', 'w') do |file|
     clean_csv.each do |row|
       file.puts row
     end
   end
-  csv_file = File.open(well_index_dir + 'cleanded_well_index.csv')
+  csv_file = File.open(well_index_dir + 'cleaned_well_index.csv')
   puts 'Seeding'
   CSV.foreach(csv_file, :headers => true, :header_converters => :symbol) do |row|
+    # byebug if row[:wellstatusdate] == 'Confidential'
+    row[:spuddate] = '' if row[:spuddate] == 'Confidential'
+    row[:wellstatusdate] = '' if row[:wellstatusdate] == 'Confidential'
     if row[:wellstatusdate].present?
       new_date = row[:wellstatusdate].split('/')
       row[:wellstatusdate] = Date.new(new_date[2].to_i, new_date[0].to_i, new_date[1].to_i)
