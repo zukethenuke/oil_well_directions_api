@@ -1,12 +1,12 @@
 class Api::NdWellsController < ApplicationController
   def index
-    if params
+    # if params
 
-    else
+    # else
       @wells = NdWell.all
       # render 'index.json.jbuilder'
       render json: {wells: @wells}
-    end
+    # end
   end
 
   def show
@@ -24,7 +24,17 @@ class Api::NdWellsController < ApplicationController
   end
 
   def all_operators
-    @operators = NdWell.select(:current_operator).distinct
+    # @operators = NdWell.select(:current_operator).distinct # return array of objects with id & current_operator
+    @operators = NdWell.pluck(:current_operator).uniq # returns array of current_operators
     render json: {operators: @operators}
+  end
+
+  def all_lease_names
+    @leases = NdWell.pluck(:lease_name)
+  end
+
+  def app_startup_data
+    @data = NdWell.select(:current_operator, :current_well_name, :lease_name, :lease_number).where.not(well_status: 'DRY')
+    render json: {wells: @data}
   end
 end
