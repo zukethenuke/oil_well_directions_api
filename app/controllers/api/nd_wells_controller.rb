@@ -34,7 +34,7 @@ class Api::NdWellsController < ApplicationController
   end
 
   def app_startup_data
-    @data = NdWell.select(:id, :current_operator, :current_well_name, :lease_name, :lease_number).where.not(well_status: ['DRY', 'PA', 'PNC'])
+    @data = NdWell.select(:id, :current_operator, :current_well_name).where.not(well_status: ['DRY', 'PA', 'PNC'])
     render json: {wells: @data}
   end
 end
