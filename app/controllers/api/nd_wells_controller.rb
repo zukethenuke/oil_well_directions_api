@@ -1,12 +1,12 @@
 class Api::NdWellsController < ApplicationController
   def index
-    # if params
-
-    # else
+    if params
+      @wells = NdWell.where("current_operator LIKE ?", '%' + params['searchValue'].upcase + '%')
+    else
       @wells = NdWell.all
       # render 'index.json.jbuilder'
-      render json: {wells: @wells}
-    # end
+    end
+    render json: {wells: @wells}
   end
 
   def show
