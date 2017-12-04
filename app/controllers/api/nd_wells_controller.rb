@@ -1,7 +1,15 @@
 class Api::NdWellsController < ApplicationController
   def index
     if params
-      @wells = NdWell.where("current_operator LIKE ?", '%' + params['searchValue'].upcase + '%')
+      # search_value = '%' + params['searchValue'].upcase + '%'
+      formated_search_value_array = params['searchValue'].split(' ').map {|val| "%#{val}%"}
+
+      # @wells = NdWell.where('current_well_name LIKE ? OR current_operator LIKE ?', searchValueArray, searchValueArray)
+      @wells = NdWell.where('current_operator ILIKE ALL ( array[?] ) OR current_well_name ILIKE ALL ( array[?] )', formated_search_value_array, formated_search_value_array)
+
+      if to_many?(@wells)
+        return render json: {error: @wells.length.to_s + ' results. Please be more specific.'}
+      end
     else
       @wells = NdWell.all
       # render 'index.json.jbuilder'
@@ -33,8 +41,12 @@ class Api::NdWellsController < ApplicationController
     @leases = NdWell.pluck(:lease_name)
   end
 
-  def app_startup_data
-    @data = NdWell.select(:id, :current_operator, :current_well_name).where.not(well_status: ['DRY', 'PA', 'PNC'])
-    render json: {wells: @data}
+  # def app_startup_data
+  #   @data = NdWell.select(:id, :current_operator, :current_well_name).where.not(well_status: ['DRY', 'PA', 'PNC'])
+  #   render json: {wells: @data}
+  # end
+
+  def to_many?(wells)
+    wells.length > 200 ? true : false
   end
 end
