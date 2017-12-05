@@ -1,11 +1,9 @@
 class Api::NdWellsController < ApplicationController
   def index
     if params
-      # search_value = '%' + params['searchValue'].upcase + '%'
-      formated_search_value_array = params['searchValue'].split(' ').map {|val| "%#{val}%"}
+      formated_search_value_array = params['searchValue'].split(' ').map {|val| "%#{val.upcase}%"}
 
-      # @wells = NdWell.where('current_well_name LIKE ? OR current_operator LIKE ?', searchValueArray, searchValueArray)
-      @wells = NdWell.where('current_operator ILIKE ALL ( array[?] ) OR current_well_name ILIKE ALL ( array[?] )', formated_search_value_array, formated_search_value_array)
+      @wells = NdWell.where('current_operator || current_well_name || api_no ILIKE ALL ( array[?] )', formated_search_value_array)
 
       if to_many?(@wells)
         return render json: {error: @wells.length.to_s + ' results. Please be more specific.'}
@@ -19,10 +17,6 @@ class Api::NdWellsController < ApplicationController
 
   def show
     @well = NdWell.where(id: params[:id])
-    puts '1**************'
-    p @well
-    puts '2**************'
-    # render 'show.json.jbuilder'
     render json: {well: @well}
   end
 
